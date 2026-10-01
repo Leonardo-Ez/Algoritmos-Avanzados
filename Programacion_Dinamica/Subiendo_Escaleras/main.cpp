@@ -3,6 +3,13 @@
 
 using namespace std;
 
+/*
+ * Problema: contar de cuántas formas distintas se puede subir una
+ * escalera de n escalones, avanzando de 1 o 2 escalones a la vez.
+ * Equivalente a la secuencia de Fibonacci (ver explicación de la
+ * recurrencia más abajo). Complejidad: O(n) tiempo y espacio.
+ */
+
 int main() {
     // Número de escalones
     int n = 4;

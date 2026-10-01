@@ -4,6 +4,18 @@
 
 using namespace std;
 
+/*
+ * Problema (caso ONCE): dadas cantidades fijas de actas por región más
+ * dos valores declarados (Lima y Extranjero), verificar tres
+ * condiciones sobre sumas de subconjuntos de regiones (total exacto
+ * de 95,000; suma de Oriente+Extranjero = 7,000; diferencia exacta de
+ * 3,000 entre dos grupos de regiones).
+ *
+ * Estrategia: mochila 0/1 / subset-sum tabulado (ver el bloque
+ * "FORMA DE SOLUCIÓN" dentro de evaluarEnvio para el detalle de la
+ * recurrencia). Complejidad: O(N x MAX_ACTAS) tiempo y espacio.
+ */
+
 // Función para ejecutar las validaciones de un envío de la ONCE usando la matriz DP
 void evaluarEnvio(int numeroEnvio, int lima, int extranjero) {
     // 8 Regiones electorales

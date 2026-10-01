@@ -6,6 +6,21 @@
 
 using namespace std;
 
+/*
+ * Problema: dado un conjunto de enteros S, dividirlo en dos
+ * subconjuntos S1 y S2 tal que la diferencia absoluta entre sus sumas
+ * sea mínima (idealmente 0, si existe una partición exacta).
+ *
+ * Estrategia: backtracking con poda. Para cada elemento se decide si
+ * entra a S1 o se deja para S2 (S2 = suma_total - S1). Se corta la
+ * recursión en cuanto se encuentra una diferencia de 0 (poda 1) y no
+ * se explora la rama "incluir" si ya se superó la mitad de la suma
+ * total (poda 2), ya que eso no puede mejorar el resultado.
+ *
+ * Complejidad: O(2^N) en el peor caso, reducido en la práctica por
+ * las podas anteriores.
+ */
+
 // Función recursiva de backtracking
 // indice: posición actual en el conjunto
 // suma_actual: suma del subconjunto S1 en la rama actual

@@ -1,6 +1,21 @@
 #include <iostream>
 #include <iomanip>
 using namespace std;
+
+/*
+ * Problema: colocar 8 reinas en un tablero de 8x8 tal que ninguna
+ * ataque a otra (misma fila, columna o diagonal).
+ *
+ * Estrategia: backtracking columna por columna. Para cada columna se
+ * prueba colocar la reina en cada fila; si esSeguro() lo permite, se
+ * avanza recursivamente a la siguiente columna. Si ninguna fila de la
+ * columna actual lleva a una solución completa, se deshace la última
+ * colocación (tablero[fila][col] = 0) y se retrocede a probar otra
+ * fila en la columna anterior.
+ *
+ * Complejidad: exponencial en el peor caso (acotada en la práctica
+ * por la poda de esSeguro).
+ */
 #define MAX_X 8
 #define MAX_Y 8
 #define MAX_REINAS 8

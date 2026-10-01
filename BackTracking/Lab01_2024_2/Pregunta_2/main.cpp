@@ -4,6 +4,19 @@
 using namespace std;
 
 /*
+ * Problema: dado un grafo (matriz de adyacencia), determinar si existe
+ * un ciclo Hamiltoniano: un recorrido que visita cada vértice
+ * exactamente una vez y regresa al vértice inicial.
+ *
+ * Estrategia: backtracking sobre el camino (path). Se fija el vértice
+ * 0 como inicio y se intenta extender el camino vértice por vértice
+ * (ver backtrackingHamiltoniano). Si una rama no lleva a un ciclo
+ * válido, se revierte la asignación y se prueba el siguiente vértice.
+ *
+ * Complejidad: O(V!) en el peor caso.
+ */
+
+/*
  * Lógica de la función 'esValido':
  * Se verifica si el vértice candidato 'v' puede ser insertado en la posición 'pos' del recorrido.
  * Se valida que exista una arista adyacente entre el vértice previo en el camino y 'v'.

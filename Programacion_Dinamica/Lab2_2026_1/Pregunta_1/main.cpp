@@ -8,7 +8,26 @@ using namespace std;
 #define INICIO 1
 #define PAGO 3
 
-
+/*
+ * Problema: variante del "weighted interval scheduling". Se tiene una
+ * lista de eventos (inicio, fin, pago) ya ordenados por hora de fin.
+ * Se busca maximizar la ganancia total elegible, con la regla
+ * adicional de que si el evento elegido anterior terminó EXACTAMENTE
+ * 1 hora antes de que empiece el actual, se obtiene un bono de 15.
+ *
+ * Estrategia: DP 1D sobre eventos ordenados por fin. DP[i] = máxima
+ * ganancia considerando los primeros i eventos.
+ *   - Opción A (no incluir el evento i): DP[i-1]
+ *   - Se busca j = el evento compatible más reciente (fin + 1 <= inicio
+ *     del evento i), retrocediendo desde i-1.
+ *   - Opción B (incluir el evento i): pago[i] + bono + DP[j], donde el
+ *     bono (15) se aplica solo si el evento j termina exactamente 1
+ *     hora antes de que empiece el evento i.
+ *   - DP[i] = max(Opción A, Opción B)
+ *
+ * Complejidad: O(M^2) en el peor caso por la búsqueda retroactiva de j
+ * (podría bajarse a O(M log M) con búsqueda binaria).
+ */
 int maximizarGanancia(int eventos[][N]) {
     //consideramos que los eventos ya vienen ordenados
     //por su hora de fin de menor a mayor

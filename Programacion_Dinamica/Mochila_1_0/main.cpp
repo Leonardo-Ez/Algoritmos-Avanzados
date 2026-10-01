@@ -5,6 +5,19 @@ using namespace std;
 #define N_OBJETOS 3
 #define CAPACIDAD_MAXIMA 9
 
+/*
+ * Problema: mochila 0/1 clásica. Dado un conjunto de objetos con peso
+ * y valor, maximizar el valor total sin exceder una capacidad máxima,
+ * pudiendo tomar cada objeto como máximo una vez.
+ *
+ * Estrategia: DP tabulada bottom-up en una matriz DP[objeto][capacidad].
+ * Para cada objeto i y capacidad j: si el objeto cabe, se compara no
+ * incluirlo (DP[i-1][j]) contra incluirlo
+ * (objetos[i].valor + DP[i-1][j - objetos[i].peso]), tomando el
+ * máximo; si no cabe, se copia el valor de la fila anterior.
+ *
+ * Complejidad: O(N_OBJETOS x CAPACIDAD_MAXIMA) tiempo y espacio.
+ */
 struct Objeto {
     int peso;
     int valor;

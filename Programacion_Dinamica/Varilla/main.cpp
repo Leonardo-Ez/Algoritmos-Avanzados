@@ -12,6 +12,13 @@ using namespace std;
  * cuantas veces queramos pero solo en partes enteras y por obvias razones, no podemos cortar en
  * longitud de 0
  *
+ * Se implementan ambos enfoques de DP para comparar:
+ *   1) cortarVarillaRecursivo: top-down con memorización.
+ *   2) cortarVarillaIterativo: bottom-up con tabulación.
+ * Ambas resuelven la misma recurrencia:
+ *   mejorValor(n) = max sobre i en [1,n] de (precios[i] + mejorValor(n - i))
+ * Complejidad: O(L^2) tiempo, O(L) espacio, en ambas versiones.
+ *
  */
 
 
