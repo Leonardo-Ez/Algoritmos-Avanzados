@@ -38,7 +38,7 @@ using namespace std;
  */
 #define NUM_CIUDADES 15
 #define INICIO 0
-//#define ITERACIONES 1000000 ejecutar bajo tu propio riesgo XDD
+//#define ITERACIONES 1000000000 ejecutar con este bajo tu propio riesgo XDD
 #define ITERACIONES 20
 #define ALPHA 0.5
 
