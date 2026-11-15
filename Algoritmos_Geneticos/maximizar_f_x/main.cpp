@@ -29,11 +29,21 @@ using namespace std;
  *     4) Cruce: tasa de casamiento BITS_CASAMIENTO = 3 genes, el hijo 1
  *        hereda los primeros 3 genes del padre 1 y los ultimos 3 del
  *        padre 2 (y viceversa para el hijo 2).
- *     5) Mutacion: se intenta negar el gen MUTACION_GEN (el menos
- *        significativo) de cada uno de los 4 individuos resultantes del
- *        cruce (2 padres + 2 hijos). Si el mutante es un clon de algun
- *        individuo de la poblacion previa, o tiene peor fitness que sus
- *        dos padres (aberracion), se descarta y se conserva el original.
+ *     5) Mutacion: cada GEN (no solo uno fijo) tiene una probabilidad
+ *        TASA_MUTACION independiente de voltearse, en cada uno de los 4
+ *        individuos resultantes del cruce (2 padres + 2 hijos). Si el
+ *        resultado es un clon de algun individuo de la poblacion previa,
+ *        o tiene peor fitness que sus dos padres (aberracion), se
+ *        descarta el intento completo y se conserva el original.
+ *
+ *     Nota: la primera version de este ejercicio mutaba solo el gen menos
+ *     significativo (fijo). Con la poblacion inicial P0 dada, ningun
+ *     individuo tiene un 1 en la posicion 4, y como el cruce solo
+ *     recombina bits ya existentes (nunca inventa un 1 nuevo), esa
+ *     posicion quedaba congelada en 0 para siempre: el optimo alcanzable
+ *     era 61 (111101), no 63 (111111). Mutar CUALQUIER gen con una
+ *     probabilidad (en vez de solo uno fijo) es lo que le da al AG la
+ *     posibilidad real de alcanzar el optimo global.
  *
  *   Cada generacion reemplaza a la poblacion completa por esos 4
  *   individuos (2 padres ya procesados + 2 hijos ya procesados), y se
@@ -68,7 +78,7 @@ using namespace std;
  */
 #define N_BITS 6
 #define NUM_INDIVIDUOS 4
-#define MUTACION_GEN 5
+#define TASA_MUTACION 0.1
 #define BITS_CASAMIENTO 3
 
 struct Individuo {
@@ -174,7 +184,12 @@ vector<Individuo> cruzar(const Individuo &padre1,const Individuo &padre2) {
 };
 
 void mutar(Individuo &individuo) {
-    individuo.cromosoma[MUTACION_GEN] = !individuo.cromosoma[MUTACION_GEN];
+    for (int gen = 0; gen < N_BITS; gen++) {
+        double r = rand() / (double)RAND_MAX;
+        if (r < TASA_MUTACION) {
+            individuo.cromosoma[gen] = !individuo.cromosoma[gen];
+        }
+    }
     individuo.valor = decodificarI(individuo.cromosoma);
     individuo.fitness = individuo.valor * individuo.valor;
 }
