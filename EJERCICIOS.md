@@ -170,6 +170,64 @@ Ambas resuelven la misma recurrencia: `mejorValor(n) = max sobre i en [1,n] de (
 
 ---
 
+## Heurísticas
+
+### 12. [`Heuristicas/Lab3_2024_1/Pregunta_1`](Heuristicas/Lab3_2024_1/Pregunta_1/main.cpp) — Camino por heurística voraz (nearest neighbor)
+
+**Problema:** dado un grafo dirigido con tiempos de viaje entre nodos (matriz de adyacencia de 8 nodos), encontrar un camino desde un nodo inicio hasta un nodo fin.
+
+**Estrategia:** heurística voraz: en cada paso se mueve al nodo vecino alcanzable con menor distancia desde el nodo actual, acumulando el tiempo de viaje, hasta llegar al destino o quedarse sin vecinos por visitar.
+
+**Complejidad:** `O(V^2)` en el peor caso (por cada nodo visitado se recorre la fila completa de la matriz buscando el mínimo).
+
+**Estado:** completo. Prueba con una matriz de 8 nodos buscando camino de `'a'` a `'g'`, imprimiendo el tiempo total de viaje.
+
+> Al ser una heurística voraz (no es Dijkstra), no garantiza el camino óptimo global: una vez que se mueve a un nodo, no reconsidera esa decisión.
+
+---
+
+### 13. [`Heuristicas/Lab3_2024_1/Pregunta_2`](Heuristicas/Lab3_2024_1/Pregunta_2/main.cpp) — Selección de carga por relación ganancia/peso
+
+**Problema:** exportar 5 paquetes (con ganancia y peso fijos, no se pueden fraccionar) en un contenedor de 16 Tn de capacidad, maximizando la ganancia total.
+
+**Estrategia:** heurística voraz tipo mochila fraccionaria: se calcula la relación ganancia/peso de cada paquete, se ordenan de mayor a menor relación (`qsort`) y se van cargando mientras quepan en el peso restante.
+
+**Complejidad:** `O(N log N)` por el ordenamiento.
+
+**Estado:** completo.
+
+> Como los paquetes no se pueden partir, esta heurística (óptima para la mochila fraccionaria) no garantiza el óptimo de la mochila 0/1 — para eso haría falta DP o backtracking, como en [`BackTracking/Mochila_0_1`](BackTracking/Mochila_0_1/main.cpp) o [`Programacion_Dinamica/Mochila_1_0`](Programacion_Dinamica/Mochila_1_0/main.cpp).
+
+---
+
+### 14. [`Heuristicas/Lab3_2026_1/Pregunta_1`](Heuristicas/Lab3_2026_1/Pregunta_1/main.cpp) — Regla de Smith (scheduling ponderado)
+
+**Problema:** dadas 4 tareas con tiempo de procesamiento y peso, ordenarlas para minimizar el costo total ponderado (suma de `peso_i × tiempo_de_finalización_i`).
+
+**Estrategia:** regla de Smith / WSPT (Weighted Shortest Processing Time): se calcula el ratio `peso/tiempo` de cada tarea y se ordenan de mayor a menor ratio (`qsort`); se procesan en ese orden acumulando el *completion time* y el costo ponderado de cada una.
+
+**Complejidad:** `O(N log N)`.
+
+**Estado:** completo, con una tabla de resultados por tarea (tiempo, peso, ratio, completion time, costo) y el costo total ponderado final.
+
+> A diferencia de las otras heurísticas de esta sección, la regla de Smith es **óptima** para este problema en una sola máquina, no solo una aproximación razonable.
+
+---
+
+### 15. [`Heuristicas/Lab3_2026_1/Pregunta_2`](Heuristicas/Lab3_2026_1/Pregunta_2/main.cpp) — Ruta con autonomía limitada (reabastecimiento)
+
+**Problema:** un vehículo con tanque de 10 unidades debe viajar de una ciudad inicio a una ciudad fin, pudiendo recargar el tanque por completo solo en ciudades con grifo.
+
+**Estrategia:** heurística voraz: en cada ciudad, si tiene grifo se recarga el tanque; luego se avanza a la ciudad no visitada **más lejana** que sea alcanzable con el tanque actual. Si ninguna ciudad alcanzable cabe en el tanque restante, se reporta que no se puede llegar al destino.
+
+**Complejidad:** `O(V^2)`.
+
+**Estado:** completo. Prueba con una matriz de 5 ciudades y grifos en las ciudades A y C.
+
+> El criterio es la ciudad alcanzable más lejana (no la más cercana), una heurística particular de este enunciado que busca maximizar el avance por cada tanque en vez de minimizar la distancia total recorrida.
+
+---
+
 ## Resumen de estado
 
 | Ejercicio | Técnica | Estado |
@@ -185,3 +243,7 @@ Ambas resuelven la misma recurrencia: `mejorValor(n) = max sobre i en [1,n] de (
 | Mochila 1/0 | DP tabulada 2D | ✅ Completo |
 | Subiendo escaleras | DP 1D (Fibonacci) | ✅ Completo |
 | Varilla (rod cutting) | DP memorizada + iterativa | ✅ Completo |
+| Camino nearest neighbor | Heurística voraz | ✅ Completo |
+| Selección de carga (ganancia/peso) | Heurística voraz | ✅ Completo |
+| Regla de Smith | Heurística (óptima) | ✅ Completo |
+| Ruta con autonomía limitada | Heurística voraz | ✅ Completo |
