@@ -8,17 +8,30 @@ Repositorio de todos los ejercicios que vaya desarrollando en el curso de Algori
 .
 ├── BackTracking/
 │   ├── 8_Rreinas/                   # Problema de las 8 reinas
+│   ├── Lab01_2024_1/Pregunta_1/     # (pendiente)
 │   ├── Lab01_2024_2/Pregunta_2/     # Ciclo Hamiltoniano
 │   ├── Lab01_2026_1/Pregunta 1/     # Partición en dos subconjuntos (mínima diferencia)
 │   └── Mochila_0_1/                 # Mochila 0/1 vía backtracking (pendiente)
-└── Programacion_Dinamica/
-    ├── Cajero_Automatico/           # Mínima cantidad de monedas (coin change)
-    ├── Lab2_2026_1/
-    │   ├── Pregunta_1/              # Scheduling de eventos con bono por continuidad
-    │   └── Pregunta_2/              # Validación de actas (ONCE) con subset-sum
-    ├── Mochila_1_0/                 # Mochila 0/1 clásica (tabulación)
-    ├── Subiendo_Escaleras/          # Climbing stairs (equivalente a Fibonacci)
-    └── Varilla/                     # Rod cutting (memorización e iterativo)
+├── Programacion_Dinamica/
+│   ├── Cajero_Automatico/           # Mínima cantidad de monedas (coin change)
+│   ├── Lab2_2026_1/
+│   │   ├── Pregunta_1/              # Scheduling de eventos con bono por continuidad
+│   │   └── Pregunta_2/              # Validación de actas (ONCE) con subset-sum
+│   ├── Mochila_1_0/                 # Mochila 0/1 clásica (tabulación)
+│   ├── Subiendo_Escaleras/          # Climbing stairs (equivalente a Fibonacci)
+│   └── Varilla/                     # Rod cutting (memorización e iterativo)
+├── Heuristicas/
+│   ├── Lab3_2024_1/                 # Nearest neighbor; mochila fraccionaria (ganancia/peso)
+│   └── Lab3_2026_1/                 # Regla de Smith; ruta con autonomía limitada
+├── Metaheuristicas/
+│   ├── 01_GRASP_Construccion_Mochila/     # GRASP (construcción): mochila 0/1
+│   ├── 02_GRASP_Ruta_Repartidor/          # GRASP (construcción): ruta tipo TSP
+│   ├── 03_GRASP_Estaciones_Bomberos/      # GRASP adaptativo: cobertura de conjuntos
+│   ├── Lab04_2025_1/                      # GRASP: balanceo de líneas de producción (a/b)
+│   └── Lab04_2026_1/                      # GRASP: selección de proyectos; bin packing
+└── Algoritmos_Geneticos/
+    ├── maximizar_f_x/                # AG: maximizar f(x) = x²
+    └── Lab05_2025_2/                 # (pendiente)
 ```
 
 Para el detalle de cada ejercicio (enunciado, estrategia de solución, complejidad y estado) revisa **[EJERCICIOS.md](EJERCICIOS.md)**.
@@ -45,3 +58,6 @@ El mismo patrón aplica para el resto de carpetas, cambiando el nombre del ejecu
 
 - **BackTracking/**: ejercicios resueltos por exploración exhaustiva con poda (backtracking).
 - **Programacion_Dinamica/**: ejercicios resueltos con programación dinámica (top-down con memorización y/o bottom-up con tabulación).
+- **Heuristicas/**: ejercicios resueltos con heurísticas voraces (greedy) y reglas de prioridad.
+- **Metaheuristicas/**: ejercicios resueltos con GRASP (fase de construcción).
+- **Algoritmos_Geneticos/**: ejercicios resueltos con Algoritmos Genéticos.
