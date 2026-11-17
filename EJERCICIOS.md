@@ -302,6 +302,32 @@ Ambas resuelven la misma recurrencia: `mejorValor(n) = max sobre i en [1,n] de (
 
 ---
 
+## Algoritmos Genéticos
+
+### 23. [`Algoritmos_Geneticos/maximizar_f_x`](Algoritmos_Geneticos/maximizar_f_x/main.cpp) — Algoritmo Genético: maximizar f(x) = x²
+
+**Problema:** maximizar `f(x) = x²` para `x` en `[0, 63]`, con población inicial `P0 = {1, 12, 20, 61}`.
+
+**Estrategia:** pipeline estándar de AG:
+- **Codificación:** cada individuo se representa con un cromosoma de 6 bits (binario puro).
+- **Fitness:** `f(x) = x²`.
+- **Selección por ruleta:** probabilidad proporcional al fitness.
+- **Cruce:** un punto de corte fijo en el gen 3 (los primeros 3 genes de un padre + los últimos 3 del otro, y viceversa).
+- **Mutación:** cada gen (no solo uno fijo) tiene una probabilidad independiente (`0.1`) de voltearse, en los 4 individuos resultantes del cruce (2 padres + 2 hijos). Si el mutante es un clon de algún individuo ya existente, o tiene peor fitness que ambos padres ("aberración"), se descarta el intento y se conserva el original.
+- Cada generación reemplaza a toda la población por esos 4 individuos, llevando un registro del mejor individuo visto en toda la corrida (no solo en la última generación).
+
+**Estado:** completo, alcanza 63 (el óptimo global) en 200 generaciones.
+
+> Nota documentada en el propio código: la primera versión de este ejercicio mutaba solo el bit menos significativo (fijo). Como la población inicial no tenía ningún 1 en la posición 4, y el cruce nunca inventa bits nuevos (solo recombina los que ya existen), esa posición quedaba congelada en 0 para siempre — el óptimo alcanzable era 61, no 63. Mutar *cualquier* gen con una probabilidad (en vez de uno fijo) es lo que le da al AG la posibilidad real de alcanzar el óptimo global.
+
+---
+
+### 24. [`Algoritmos_Geneticos/Lab05_2025_2`](Algoritmos_Geneticos/Lab05_2025_2/main.cpp) — (pendiente)
+
+**Estado:** ⚠️ **pendiente / sin implementar.** Por ahora el `main.cpp` es un esqueleto vacío (solo el `include` de `<iomanip>`, sin enunciado ni lógica).
+
+---
+
 ## Resumen de estado
 
 | Ejercicio | Técnica | Estado |
@@ -328,3 +354,5 @@ Ambas resuelven la misma recurrencia: `mejorValor(n) = max sobre i en [1,n] de (
 | GRASP balanceo con prioridades (Lab04 b) | Metaheurística (GRASP) | ✅ Completo — no llega al óptimo |
 | GRASP selección de proyectos (Lab04 2026-1 P1) | Metaheurística (GRASP) | ✅ Completo — óptimo |
 | GRASP bin packing (Lab04 2026-1 P2) | Metaheurística (GRASP + First Fit) | ✅ Completo — óptimo |
+| AG maximizar f(x)=x² | Algoritmo Genético | ✅ Completo — llega al óptimo global |
+| Lab05_2025_2 | Algoritmo Genético (sin definir) | ⚠️ Pendiente / archivo vacío |
