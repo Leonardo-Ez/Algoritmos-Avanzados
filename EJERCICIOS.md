@@ -228,6 +228,80 @@ Ambas resuelven la misma recurrencia: `mejorValor(n) = max sobre i en [1,n] de (
 
 ---
 
+## Metaheurísticas (GRASP)
+
+> Los tres primeros ejercicios (`01`, `02`, `03`) tienen enunciado e instancia de prueba redactados por Claude (Anthropic) como práctica guiada de la fase de construcción de GRASP; la implementación en cada uno es propia. Los `Lab04_*` son los laboratorios del curso.
+
+### 16. [`Metaheuristicas/01_GRASP_Construccion_Mochila`](Metaheuristicas/01_GRASP_Construccion_Mochila/main.cpp) — GRASP (construcción): mochila 0/1
+
+**Problema:** mochila de excursionista, capacidad 20 kg, 8 objetos, maximizar utilidad.
+
+**Estrategia:** fase de construcción de GRASP. Mérito `c(x) = utilidad/peso` (se maximiza). En cada paso: `beta` = mayor mérito entre los candidatos que caben, `tau` = menor, `umbral = beta - alfa·(beta - tau)`, y se elige al azar un objeto de la RCL (los que cumplen el umbral). Se repite la construcción `ITERACIONES` veces y se guarda la mejor mochila.
+
+**Estado:** completo para `alfa = 0.3` fijo (50 iteraciones); el enunciado original pedía comparar `alfa = 0.0, 0.3, 0.5, 1.0` en una sola corrida, lo que queda pendiente de parametrizar. Con alfa=0 (voraz) el óptimo documentado es 108; el óptimo global del problema es 110.
+
+---
+
+### 17. [`Metaheuristicas/02_GRASP_Ruta_Repartidor`](Metaheuristicas/02_GRASP_Ruta_Repartidor/main.cpp) — GRASP (construcción): ruta tipo TSP
+
+**Problema:** un repartidor debe visitar un conjunto de ciudades una vez cada una minimizando la distancia total recorrida (variante simplificada del problema del viajante).
+
+**Estrategia:** fase de construcción de GRASP. Mérito = distancia desde la ciudad actual a cada candidata (se minimiza). `beta` = menor distancia, `tau` = mayor, `umbral = beta + alfa·(tau - beta)`, RCL = candidatas con distancia `<= umbral`, se elige una al azar.
+
+**Estado:** completo; el `main` usa la instancia de 15 ciudades con `alfa = 0.5` y 20 iteraciones (hay una instancia de 5 ciudades comentada, con óptimo conocido 16).
+
+---
+
+### 18. [`Metaheuristicas/03_GRASP_Estaciones_Bomberos`](Metaheuristicas/03_GRASP_Estaciones_Bomberos/main.cpp) — GRASP (construcción) adaptativo: cobertura de conjuntos
+
+**Problema:** elegir qué estaciones de bomberos construir (de 5 posibles, cada una con costo y distritos que cubre) para cubrir los 6 distritos de una municipalidad al mínimo costo.
+
+**Estrategia:** fase de construcción de GRASP **adaptativa**: el mérito de cada estación candidata (`costo / distritos nuevos que cubre`) se recalcula en cada paso, porque los distritos ya cubiertos dejan de contar como "nuevos" para las estaciones restantes (la "A" de *Adaptive* en GRASP). RCL con `umbral = beta + alfa·(tau - beta)` sobre ese mérito (se minimiza).
+
+**Estado:** completo, `alfa = 0.5`, 50 iteraciones.
+
+---
+
+### 19. [`Metaheuristicas/Lab04_2025_1/Parte_a`](Metaheuristicas/Lab04_2025_1/Parte_a/main.cpp) — GRASP: balanceo de líneas de producción (Lab04 2025-1)
+
+**Problema:** repartir 20 órdenes (2236 botellas en total) entre 5 líneas de producción (cada una con 4 máquinas en serie) minimizando el *makespan* (el tiempo de la línea más cargada).
+
+**Estrategia:** fase de construcción de GRASP (`alfa = 0.3`) donde el mérito es la cantidad de botellas del pedido (se maximiza, para priorizar los pedidos grandes); el pedido elegido de la RCL se asigna siempre a la línea con menor carga actual (balanceo *least-loaded*).
+
+**Estado:** completo. Según el propio comentario del archivo, esta implementación alcanza en algunas corridas el óptimo global de 2688 minutos (cota inferior verificada analíticamente: 448 botellas × 6 min/botella), mejorando el 2724 propuesto como solución en el enunciado del laboratorio.
+
+---
+
+### 20. [`Metaheuristicas/Lab04_2025_1/Parte_b`](Metaheuristicas/Lab04_2025_1/Parte_b/main.cpp) — GRASP: balanceo de líneas con prioridades (Lab04 2025-1)
+
+**Problema:** la misma situación que la parte a, pero cada orden tiene además una prioridad, y deben atenderse todas las órdenes de una prioridad antes de pasar a la siguiente.
+
+**Estrategia:** mismo balanceo *least-loaded*, pero la RCL se construye solo entre las órdenes de la prioridad que se está atendiendo en ese momento (`alfa = 0.3`), en vez de entre todas las órdenes pendientes.
+
+**Estado:** completo. El comentario del archivo documenta que, por restringirse a una prioridad a la vez, esta variante pierde libertad para balancear las líneas y **no alcanza** el óptimo de 2688: el mejor resultado documentado es 2706 (con `alfa = 1`), y la ejecución tal cual (`alfa = 0.3`, 200 iteraciones) da 2754–2760.
+
+---
+
+### 21. [`Metaheuristicas/Lab04_2026_1/Pregunta_1`](Metaheuristicas/Lab04_2026_1/Pregunta_1/main.cpp) — GRASP: selección de proyectos con dependencias (Lab04 2026-1)
+
+**Problema:** elegir qué proyectos ejecutar con un presupuesto `P = 400`, donde algunos proyectos requieren que otros (sus predecesores) ya hayan sido elegidos, maximizando la ganancia total.
+
+**Estrategia:** fase de construcción de GRASP (`alfa = 0.3`, 1000 iteraciones). Se empieza solo con los proyectos sin predecesores como candidatos; el mérito de cada uno es `(ganancia propia + ganancia de los proyectos que desbloquea) / costo`, para no penalizar proyectos de bajo valor propio que habilitan a otros de alto valor. Al elegir un proyecto, los que dependían de él y ya tienen todos sus predecesores satisfechos se vuelven candidatos.
+
+**Estado:** completo. Encuentra la combinación `{1, 2, 4, 5, 6}` con ganancia 1900, que el comentario del archivo confirma como óptimo global (verificado por fuerza bruta).
+
+---
+
+### 22. [`Metaheuristicas/Lab04_2026_1/Pregunta_2`](Metaheuristicas/Lab04_2026_1/Pregunta_2/main.cpp) — GRASP + First Fit: bin packing (Lab04 2026-1)
+
+**Problema:** repartir un conjunto de pedidos entre camiones de capacidad `K = 50` kg, minimizando la cantidad de camiones usados.
+
+**Estrategia:** los pedidos se ordenan una sola vez de mayor a menor peso; fase de construcción de GRASP (`alfa = 0.2`, 1000 iteraciones) sobre ese orden fijo (la RCL son los primeros *k* pedidos pendientes); el pedido elegido se asigna por *First Fit* al primer camión donde quepa, abriendo uno nuevo si no cabe en ninguno.
+
+**Estado:** completo. Encuentra una solución de 3 camiones, igual al ejemplo del enunciado, que el comentario del archivo confirma como óptima (135 kg en total; 135/50 > 2, así que 2 camiones son insuficientes).
+
+---
+
 ## Resumen de estado
 
 | Ejercicio | Técnica | Estado |
@@ -247,3 +321,10 @@ Ambas resuelven la misma recurrencia: `mejorValor(n) = max sobre i en [1,n] de (
 | Selección de carga (ganancia/peso) | Heurística voraz | ✅ Completo |
 | Regla de Smith | Heurística (óptima) | ✅ Completo |
 | Ruta con autonomía limitada | Heurística voraz | ✅ Completo |
+| GRASP mochila 0/1 | Metaheurística (GRASP) | ✅ Completo (alfa fijo) |
+| GRASP ruta tipo TSP | Metaheurística (GRASP) | ✅ Completo |
+| GRASP cobertura (bomberos) | Metaheurística (GRASP adaptativo) | ✅ Completo |
+| GRASP balanceo de líneas (Lab04 a) | Metaheurística (GRASP) | ✅ Completo — llega al óptimo |
+| GRASP balanceo con prioridades (Lab04 b) | Metaheurística (GRASP) | ✅ Completo — no llega al óptimo |
+| GRASP selección de proyectos (Lab04 2026-1 P1) | Metaheurística (GRASP) | ✅ Completo — óptimo |
+| GRASP bin packing (Lab04 2026-1 P2) | Metaheurística (GRASP + First Fit) | ✅ Completo — óptimo |
