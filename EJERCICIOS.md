@@ -24,7 +24,13 @@ Este documento explica, para cada ejercicio del repositorio, qué problema resue
 
 ---
 
-### 2. [`BackTracking/Lab01_2024_2/Pregunta_2`](BackTracking/Lab01_2024_2/Pregunta_2/main.cpp) — Ciclo Hamiltoniano
+### 2. [`BackTracking/Lab01_2024_1/Pregunta_1`](BackTracking/Lab01_2024_1/Pregunta_1/main.cpp) — (pendiente)
+
+**Estado:** ⚠️ **pendiente / sin implementar.** El archivo `main.cpp` existe pero está vacío (ni enunciado ni código). Queda por definir el problema y resolverlo.
+
+---
+
+### 3. [`BackTracking/Lab01_2024_2/Pregunta_2`](BackTracking/Lab01_2024_2/Pregunta_2/main.cpp) — Ciclo Hamiltoniano
 
 **Problema:** dado un grafo representado como matriz de adyacencia, determinar si existe un ciclo Hamiltoniano (un recorrido que visita todos los vértices exactamente una vez y regresa al vértice inicial).
 
@@ -41,7 +47,7 @@ Este documento explica, para cada ejercicio del repositorio, qué problema resue
 
 ---
 
-### 3. [`BackTracking/Lab01_2026_1/Pregunta 1`](BackTracking/Lab01_2026_1/Pregunta%201/main.cpp) — Partición en dos subconjuntos con mínima diferencia
+### 4. [`BackTracking/Lab01_2026_1/Pregunta 1`](BackTracking/Lab01_2026_1/Pregunta%201/main.cpp) — Partición en dos subconjuntos con mínima diferencia
 
 **Problema:** dado un conjunto de enteros `S`, dividirlo en dos subconjuntos `S1` y `S2` tales que la diferencia absoluta entre sus sumas sea mínima (idealmente 0, si el total es par y existe una partición exacta).
 
@@ -58,7 +64,7 @@ Este documento explica, para cada ejercicio del repositorio, qué problema resue
 
 ---
 
-### 4. [`BackTracking/Mochila_0_1`](BackTracking/Mochila_0_1/main.cpp) — Mochila 0/1 vía backtracking
+### 5. [`BackTracking/Mochila_0_1`](BackTracking/Mochila_0_1/main.cpp) — Mochila 0/1 vía backtracking
 
 **Problema:** resolver el problema de la mochila 0/1 (maximizar valor sin exceder una capacidad de peso) explorando combinaciones por backtracking.
 
@@ -68,7 +74,7 @@ Este documento explica, para cada ejercicio del repositorio, qué problema resue
 
 ## Programación Dinámica
 
-### 5. [`Programacion_Dinamica/Cajero_Automatico`](Programacion_Dinamica/Cajero_Automatico/main.cpp) — Mínima cantidad de monedas (coin change)
+### 6. [`Programacion_Dinamica/Cajero_Automatico`](Programacion_Dinamica/Cajero_Automatico/main.cpp) — Mínima cantidad de monedas (coin change)
 
 **Problema:** dado un conjunto de denominaciones de moneda (`{1, 3, 4}`) y un monto a retirar (`RETIRO = 6`), hallar la mínima cantidad de monedas necesarias para formar ese monto (monedas con repetición ilimitada).
 
@@ -84,7 +90,7 @@ Este documento explica, para cada ejercicio del repositorio, qué problema resue
 
 ---
 
-### 6. [`Programacion_Dinamica/Lab2_2026_1/Pregunta_1`](Programacion_Dinamica/Lab2_2026_1/Pregunta_1/main.cpp) — Scheduling de eventos con bono por continuidad
+### 7. [`Programacion_Dinamica/Lab2_2026_1/Pregunta_1`](Programacion_Dinamica/Lab2_2026_1/Pregunta_1/main.cpp) — Scheduling de eventos con bono por continuidad
 
 **Problema:** variante del clásico *weighted interval scheduling*. Se tiene una lista de eventos con hora de inicio, hora de fin y pago. Se busca maximizar la ganancia total elegible, con la regla adicional de que si el evento elegido anterior terminó exactamente 1 hora antes de que empiece el actual, se obtiene un bono de 15.
 
@@ -102,7 +108,7 @@ Este documento explica, para cada ejercicio del repositorio, qué problema resue
 
 ---
 
-### 7. [`Programacion_Dinamica/Lab2_2026_1/Pregunta_2`](Programacion_Dinamica/Lab2_2026_1/Pregunta_2/main.cpp) — Validación de actas (caso ONCE) con subset-sum
+### 8. [`Programacion_Dinamica/Lab2_2026_1/Pregunta_2`](Programacion_Dinamica/Lab2_2026_1/Pregunta_2/main.cpp) — Validación de actas (caso ONCE) con subset-sum
 
 **Problema:** contextualizado como una validación electoral: dadas cantidades fijas de actas por región más dos valores declarados (Lima y Extranjero), verificar tres condiciones sobre sumas de subconjuntos de regiones (total exacto de 95,000; suma de dos regiones específicas; diferencia exacta de 3,000 entre dos grupos).
 
@@ -117,7 +123,7 @@ Este documento explica, para cada ejercicio del repositorio, qué problema resue
 
 ---
 
-### 8. [`Programacion_Dinamica/Mochila_1_0`](Programacion_Dinamica/Mochila_1_0/main.cpp) — Mochila 0/1 clásica
+### 9. [`Programacion_Dinamica/Mochila_1_0`](Programacion_Dinamica/Mochila_1_0/main.cpp) — Mochila 0/1 clásica
 
 **Problema:** el problema clásico de la mochila 0/1: dado un conjunto de objetos con peso y valor, maximizar el valor total sin exceder una capacidad máxima, pudiendo tomar cada objeto como máximo una vez.
 
@@ -132,7 +138,7 @@ Este documento explica, para cada ejercicio del repositorio, qué problema resue
 
 ---
 
-### 9. [`Programacion_Dinamica/Subiendo_Escaleras`](Programacion_Dinamica/Subiendo_Escaleras/main.cpp) — Climbing stairs
+### 10. [`Programacion_Dinamica/Subiendo_Escaleras`](Programacion_Dinamica/Subiendo_Escaleras/main.cpp) — Climbing stairs
 
 **Problema:** contar de cuántas formas distintas se puede subir una escalera de `n` escalones, pudiendo avanzar de 1 o 2 escalones a la vez.
 
@@ -147,7 +153,7 @@ Este documento explica, para cada ejercicio del repositorio, qué problema resue
 
 ---
 
-### 10. [`Programacion_Dinamica/Varilla`](Programacion_Dinamica/Varilla/main.cpp) — Rod cutting
+### 11. [`Programacion_Dinamica/Varilla`](Programacion_Dinamica/Varilla/main.cpp) — Rod cutting
 
 **Problema:** el problema clásico de corte de varilla: dada una varilla de longitud `L` y una tabla de precios según la longitud de cada corte, encontrar la forma de cortarla (en partes enteras) que maximice el ingreso total.
 
@@ -169,6 +175,7 @@ Ambas resuelven la misma recurrencia: `mejorValor(n) = max sobre i en [1,n] de (
 | Ejercicio | Técnica | Estado |
 |---|---|---|
 | 8 Reinas | Backtracking | ✅ Completo |
+| Lab01_2024_1 Pregunta_1 | Backtracking (sin definir) | ⚠️ Pendiente / archivo vacío |
 | Ciclo Hamiltoniano | Backtracking | ✅ Completo |
 | Partición mínima diferencia | Backtracking + poda | ✅ Completo |
 | Mochila 0/1 (backtracking) | Backtracking | ⚠️ Pendiente de implementar |
