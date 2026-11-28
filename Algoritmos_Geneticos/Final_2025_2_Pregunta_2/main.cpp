@@ -8,90 +8,87 @@
 #define NUMIND 15
 #define TSELECCION 0.5
 #define PCASAMIENTO 0.5
-#define TMUTACION 0.1
+#define TMUTACION 0.10
 
 using namespace  std;
 
-
 struct Caracteristica {
-    int indice;
     double pesoPredictivo;
     string descripcion;
 };
 
 struct ParRedundante {
-    int indice1;
-    int indice2;
+    int caracteristica1;
+    int caracteristica2;
     double reduccion;
 };
 
-double sumasRedundantes(const vector<int> &cromo,
-    const vector<Caracteristica> &caracteristicas,
-    const vector<ParRedundante> &redundancias,
-    vector<bool> &reducidos) {
-    double sumasRedundantes=0;
-    for (int pos=0;pos<cromo.size();pos++) {
-        for (int i=0;i<redundancias.size();i++) {
-            if (redundancias[i].indice1==pos+1
-                and cromo[redundancias[i].indice2-1]
-                and !reducidos[redundancias[i].indice1-1] and !reducidos[redundancias[i].indice2-1] ) {
-                //caso si es que es el indice 1 y no su usó ni a su par
-                double sumaBase=caracteristicas[redundancias[i].indice1-1].pesoPredictivo+caracteristicas[redundancias[i].indice2-1].pesoPredictivo;
-                sumasRedundantes+= sumaBase*(1-redundancias[i].reduccion)-sumaBase;
-                reducidos[redundancias[i].indice1-1]=true;
-                reducidos[redundancias[i].indice2-1]=true;
-
-                }
-            else if (redundancias[i].indice2==pos+1
-                and cromo[redundancias[i].indice1-1]
-                and !reducidos[redundancias[i].indice2-1] and !reducidos[redundancias[i].indice1-1]) {
-                //caso en el que es el indice 2
-                double sumaBase=caracteristicas[redundancias[i].indice2-1].pesoPredictivo+caracteristicas[redundancias[i].indice1-1].pesoPredictivo;
-                sumasRedundantes+= sumaBase*(1-redundancias[i].reduccion)-sumaBase;
-                    reducidos[redundancias[i].indice1-1]=true;
-                    reducidos[redundancias[i].indice2-1]=true;
-                }
+int tieneParRedundante(const vector<ParRedundante> &paresRedundantes,
+    int posCromo,const vector<int> &cromo) {
+    for (int i=0;i<paresRedundantes.size();i++) {
+        if (paresRedundantes[i].caracteristica1-1==posCromo
+            and cromo[paresRedundantes[i].caracteristica2-1]) {
+            return i;
+        }
+        else if (paresRedundantes[i].caracteristica2-1==posCromo
+            and cromo[paresRedundantes[i].caracteristica1-1]) {
+            return i;
         }
     }
-
-    return sumasRedundantes;
+    return -1;
 }
 
-
-double calculafitness(const vector<int> &cromo,
+double calcularSumaCaracteristicas(vector<int> cromo,
     const vector<Caracteristica> &caracteristicas,
-    const vector<ParRedundante> &redundancias) {
+    const vector<ParRedundante> &paresRedundantes) {
     double sumap=0;
-    int cantidad=0;
-    vector<bool> reducidos;
-    for (int i=0;i<cromo.size();i++) {
-        reducidos.push_back(false);
-    }
-
-    for (int i=0;i<cromo.size();i++) {
+    for(int i=0;i<cromo.size();i++) {
         sumap+=cromo[i]*caracteristicas[i].pesoPredictivo;
-        cantidad+=cromo[i];
     }
-    sumap+=sumasRedundantes(cromo,caracteristicas,redundancias,reducidos);
-    if (cantidad==0) return 0;
-    return  sumap/cantidad;
+    //aplicamos las reducciones:
+    for (int i=0;i<cromo.size();i++) {
+        if (cromo[i]) {
+            //aplicamos reducción solo a la posición actual, el otro par
+            //redundante aplicará su propia reducción
+            int posRedundante=tieneParRedundante(paresRedundantes,i,cromo);
+            if (posRedundante!=-1) {
+                //le quitamos el desfase que generó al sumar el cromo sin considerar la
+                sumap+=((1-paresRedundantes[posRedundante].reduccion)*caracteristicas[i].pesoPredictivo)-
+                        caracteristicas[i].pesoPredictivo;
+                //reducción
+            }
+        }
+    }
+    return sumap;
+}
+
+double calculafitness(vector<int>cromo,
+    const vector<Caracteristica> &caracteristicas,
+    const vector<ParRedundante> &paresRedundantes) {
+    double sumap=calcularSumaCaracteristicas(cromo,caracteristicas,paresRedundantes);
+    int cantidad=0;
+    for (int i=0;i<cromo.size();i++) {
+        if (cromo[i]) cantidad++;
+    }
+    if (cantidad==1 or cantidad==0) return 0;
+    return sumap/cantidad;
 }
 
 bool aberracion(vector<int>ind,
     const vector<Caracteristica> &caracteristicas,
-    const vector<ParRedundante> &redundancias
-    ) {
-    return calculafitness(ind,caracteristicas,redundancias)<=0;
+    const vector<ParRedundante> &paresRedundantes) {
+    return calculafitness(ind,caracteristicas,paresRedundantes)<=0;
 }
 
 void muestrapoblacion(vector<vector<int>>poblacion,
     const vector<Caracteristica> &caracteristicas,
-    const vector<ParRedundante> &redundancias) {
+    const vector<ParRedundante> &paresRedundantes) {
     for(int i=0;i<poblacion.size();i++) {
         for(int j=0;j<poblacion[i].size();j++) {
             cout<<poblacion[i][j]<<" ";
         }
-        cout<<" fo="<< calculafitness(poblacion[i],caracteristicas,redundancias)<<endl;
+        cout<<"Peso neto: "<<calcularSumaCaracteristicas(poblacion[i],caracteristicas,paresRedundantes)<<" / ";
+        cout<<" fo="<< calculafitness(poblacion[i],caracteristicas,paresRedundantes)<<endl;
     }
 
 }
@@ -120,7 +117,7 @@ void mataclon(vector<vector<int>> &poblacion) {
 
 void generapoblacion(vector<vector<int>> &poblacion,
     const vector<Caracteristica> &caracteristicas,
-    const vector<ParRedundante> &incompatibilidades) {
+    const vector<ParRedundante> &paresRedundantes) {
     int cont=0;
     srand(time(NULL));
     while (cont<NUMIND) {
@@ -128,7 +125,7 @@ void generapoblacion(vector<vector<int>> &poblacion,
         // aqui también cambiar
         for (int i=0; i<caracteristicas.size(); i++)
             individuo.push_back(rand()%2);
-        if (!aberracion(individuo,caracteristicas,incompatibilidades)) {
+        if (!aberracion(individuo,caracteristicas,paresRedundantes)) {
             poblacion.push_back(individuo);
             cont++;
         }
@@ -138,18 +135,18 @@ void generapoblacion(vector<vector<int>> &poblacion,
 void calculasupervivencia(vector<vector<int>>poblacion,
     vector<double> &supervivencia,
     const vector<Caracteristica> &caracteristicas,
-    const vector<ParRedundante> &redundancias) {
+    const vector<ParRedundante> &paresRedundantes) {
     double sumafitness=0;
 
     for(int i=0;i<poblacion.size();i++)
-        sumafitness+=calculafitness(poblacion[i],caracteristicas,redundancias);
+        sumafitness+=calculafitness(poblacion[i],caracteristicas,paresRedundantes);
     for (int i=0;i<poblacion.size();i++) {
         double superfit;
-        superfit=round(100*(double)calculafitness(poblacion[i],caracteristicas,redundancias)/sumafitness);
+        superfit=round(100*(double)calculafitness(poblacion[i],caracteristicas,paresRedundantes)/sumafitness);
         supervivencia.push_back(superfit);
     }
 }
-void cargaruleta(vector<double>supervivencia,int *ruleta) {
+void cargaruleta(vector<double >supervivencia,int *ruleta) {
     int cont=0;
     for (int i=0;i<supervivencia.size();i++)
         for (int j=0;j<supervivencia[i];j++) {
@@ -159,13 +156,12 @@ void cargaruleta(vector<double>supervivencia,int *ruleta) {
 
 
 
-void seleccion(vector<vector<int>>poblacion,
-    vector<vector<int>> &padres,
+void seleccion(vector<vector<int>>poblacion,vector<vector<int>> &padres,
     const vector<Caracteristica> &caracteristicas,
-    const vector<ParRedundante> &redundancias ) {
+     const vector<ParRedundante> &paresRedundantes) {
     int ruleta[100]{-1};
     vector<double>supervivencia;
-    calculasupervivencia(poblacion,supervivencia,caracteristicas,redundancias);
+    calculasupervivencia(poblacion,supervivencia,caracteristicas,paresRedundantes);
     cargaruleta(supervivencia,ruleta);
     int npadres=round(poblacion.size()*TSELECCION);
 
@@ -189,14 +185,14 @@ void creahijo(vector<int>padre,vector<int>madre,
 
 void casamiento(vector<vector<int>> &poblacion,vector<vector<int>>padres,
     const vector<Caracteristica> &caracteristicas,
-    const vector<ParRedundante> &redundancias) {
+    const vector<ParRedundante> &paresRedundantes) {
 
     for(int i=0;i<padres.size();i++)
         for(int j=0;j<padres.size();j++) {
             if (i!=j) {
                 vector<int>hijo;
                 creahijo(padres[i],padres[j],hijo);
-                if (!aberracion(hijo,caracteristicas,redundancias))
+                if (!aberracion(hijo,caracteristicas,paresRedundantes))
                     poblacion.push_back(hijo);
             }
 
@@ -207,16 +203,16 @@ void casamiento(vector<vector<int>> &poblacion,vector<vector<int>>padres,
 
 void regenerapoblacion(vector<vector<int>> &poblacion,
     const vector<Caracteristica> &caracteristicas,
-    const vector<ParRedundante> &redundancias){
+    const vector<ParRedundante> &paresRedundantes){
     mataclon(poblacion);
     // se evita emplear variables globales
     sort(poblacion.begin(), poblacion.end(),
-         [caracteristicas,redundancias](const vector<int>& a, const vector<int>& b) {
+         [caracteristicas,paresRedundantes](const vector<int>& a, const vector<int>& b) {
             double suma=0, sumb=0;
             for(int i=0;i<a.size();i++)
-                suma += calculafitness(a,caracteristicas,redundancias);
+                suma += calculafitness(a, caracteristicas,paresRedundantes);
             for(int i=0;i<b.size();i++)
-                sumb += calculafitness(b, caracteristicas,redundancias);
+                sumb += calculafitness(b, caracteristicas,paresRedundantes);
 
             return suma > sumb;
          });
@@ -227,7 +223,7 @@ void regenerapoblacion(vector<vector<int>> &poblacion,
 
 void mutacion(vector<vector<int>> &poblacion,vector<vector<int>>padres,
     const vector<Caracteristica> &caracteristicas,
-    const vector<ParRedundante> &redundancias) {
+    const vector<ParRedundante> &paresRedundantes) {
     int nmutaciones=round(padres[0].size()*TMUTACION);
     for (int i=0;i<padres.size();i++) {
         int cont=0;
@@ -238,62 +234,81 @@ void mutacion(vector<vector<int>> &poblacion,vector<vector<int>>padres,
             else padres[i][gen]=0;
             cont++;
         }
-        if (!aberracion(padres[i],caracteristicas,redundancias))
+        if (!aberracion(padres[i],caracteristicas,paresRedundantes))
             poblacion.push_back(padres[i]);
     }
 }
 
+// void inversion(vector<vector<int>> &poblacion,vector<vector<int>>padres,
+//     const vector<Caracteristica> &caracteristicas,
+//     const vector<ParRedundante> &paresRedundantes) {
+//
+//     for (int i=0;i<padres.size();i++) {
+//         for (int j=0;j<padres[i].size();j++) {
+//             //cambiar para numeros enteros
+//             if (padres[i][j]==0) padres[i][j]=1;
+//             else padres[i][j]=0;
+//         }
+//         if (!aberracion(padres[i],caracteristicas,paresRedundantes))
+//             poblacion.push_back(padres[i]);
+//     }
+// }
 
 double muestramejor(vector<vector<int>> poblacion,
     const vector<Caracteristica> &caracteristicas,
-    const vector<ParRedundante> &redundancias){
+    const vector<ParRedundante> &paresRedundantes){
     int mejor=0;
     // puede mejorarse ya que esta muestra mejor lo busca en toda la poblaciÃ³n
     // desde luego se puede asumir que es la posiciÃ³n 0 para nuestro caso
     for(int i=0;i<poblacion.size();i++)
-        if(calculafitness(poblacion[mejor],caracteristicas,redundancias)<calculafitness(poblacion[i],caracteristicas,redundancias))
+        if(calculafitness(poblacion[mejor],caracteristicas,paresRedundantes)<calculafitness(poblacion[i],caracteristicas,paresRedundantes))
             mejor=i;
 
-    cout << endl<<"La mejor solucion es:" << calculafitness(poblacion[mejor],caracteristicas,redundancias)<<endl;
+    cout << endl<<"La mejor solucion es:" <<
+        calculafitness(poblacion[mejor],caracteristicas,paresRedundantes)<<
+        " Con peso neto: "<<calcularSumaCaracteristicas(poblacion[mejor],caracteristicas,paresRedundantes)<<endl;
     for(int i=0;i<poblacion[mejor].size();i++)
         cout << poblacion[mejor][i] << "  ";
 
     cout << endl;
-    return calculafitness(poblacion[mejor],caracteristicas,redundancias);
+    return calculafitness(poblacion[mejor],caracteristicas,paresRedundantes);
 }
 
 void mochilaAG(const vector<Caracteristica> &caracteristicas,
-    const vector<ParRedundante> &redundancias) {
+    const vector<ParRedundante> &paresRedundantes) {
     vector<vector<int>> poblacion;
-    generapoblacion(poblacion,caracteristicas,redundancias);
+    generapoblacion(poblacion,caracteristicas,paresRedundantes);
 
     for(int i=0;i<ITERACIONES;i++) {
         vector<vector<int>>padres;
-        muestrapoblacion(poblacion,caracteristicas,redundancias);
+        muestrapoblacion(poblacion,caracteristicas,paresRedundantes);
         cout << endl;
-        seleccion(poblacion,padres,caracteristicas,redundancias);
-        casamiento(poblacion,padres,caracteristicas,redundancias);
+        seleccion(poblacion,padres,caracteristicas,paresRedundantes);
+        casamiento(poblacion,padres,caracteristicas,paresRedundantes);
         mataclon(poblacion);
-        mutacion((poblacion),padres,caracteristicas,redundancias);
+        mutacion((poblacion),padres,caracteristicas,paresRedundantes);
+        //inversion(poblacion,padres,caracteristicas,paresRedundantes);
 
-        regenerapoblacion(poblacion,caracteristicas,redundancias);
-        muestrapoblacion(poblacion,caracteristicas,redundancias);
-        muestramejor(poblacion,caracteristicas,redundancias);
+        regenerapoblacion(poblacion,caracteristicas,paresRedundantes);
+        muestrapoblacion(poblacion,caracteristicas,paresRedundantes);
+        muestramejor(poblacion,caracteristicas,paresRedundantes);
+
     }
 }
 
 int main() {
+
     vector<Caracteristica> caracteristicas{
-        {1,0.85,"Edad del paciente"},
-        {2,0.72,"Indice de masa corporal"},
-        {3,0.91,"Nivel de glucosa"},
-        {4,0.60,"Presion sistólica"},
-        {5,0.78,"Colesterol total"},
-        {6,0.45,"Horas de ejercicio"},
-        {7,0.88,"Antecedentes familiares"},
-        {8,0.55,"Horas de sueño"},
+        {0.85},
+        {0.72},
+        {0.91},
+        {0.6},
+        {0.78},
+        {0.45},
+        {0.88},
+        {0.55},
     };
-    vector<ParRedundante> incompatibilidades{
+    vector<ParRedundante> paresRedundantes{
         {1,3,0.30},
         {1,7,0.25},
         {3,7,0.20},
@@ -301,7 +316,7 @@ int main() {
         {4,8,0.15},
     };
 
-    mochilaAG(caracteristicas,incompatibilidades);
+    mochilaAG(caracteristicas,paresRedundantes);
 
     return 0;
 }
