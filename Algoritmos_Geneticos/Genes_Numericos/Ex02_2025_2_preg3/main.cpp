@@ -306,6 +306,9 @@ void mochilaAG(const vector<int> &tiempos,int maxCarga) {
  * chica y pocas generaciones - justo lo que el enunciado pide observar al
  * comparar 10 vs 50 iteraciones (con 50 converge mas seguido, pero no
  * siempre garantizado).
+ *
+ * //esto claude lo encontró cuando comenzó a buscar cual era la mejor solución
+ * a fuerza bruta, me pareció un comportamiento interesante así que lo puse :)
  */
 int main() {
     vector<int> tiempos={15,10,8,20,5,12,18,7};
