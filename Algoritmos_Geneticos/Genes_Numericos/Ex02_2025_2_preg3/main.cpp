@@ -291,6 +291,21 @@ void mochilaAG(const vector<int> &tiempos,int maxCarga) {
  * Servidor 2: 23
  * Servidor 3: 25
  * Servidor 4: 22
+ *
+ * Hallazgo al comparar 10 vs 50 iteraciones:
+ * con NUMIND=10 la poblacion a veces no logra bajar de MAX_CARGA (25) ni
+ * siquiera con 50 iteraciones. Rastreando una corrida que se quedo en 27,
+ * el mejor fitness mejoro rapido al inicio (33 -> 30 -> 28 -> 27 en las
+ * primeras ~16 generaciones) y despues se congelo exactamente en 27 por
+ * las ~34 generaciones restantes, sin mejorar mas.
+ * Es un caso de convergencia prematura: con una poblacion tan chica (10
+ * individuos) y bastante presion elitista (regenerapoblacion siempre se
+ * queda con los 10 mejores), la poblacion pierde diversidad rapido y el
+ * cruce/mutacion dejan de producir algo mejor que el "campeon" actual.
+ * No es un bug de logica, es una limitacion real de un GA con poblacion
+ * chica y pocas generaciones - justo lo que el enunciado pide observar al
+ * comparar 10 vs 50 iteraciones (con 50 converge mas seguido, pero no
+ * siempre garantizado).
  */
 int main() {
     vector<int> tiempos={15,10,8,20,5,12,18,7};
